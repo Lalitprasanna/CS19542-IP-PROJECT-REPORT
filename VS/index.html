@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Motion Balls */
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .ball {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: moveBall 10s infinite ease-in-out;
+        }
+
+        .ball1 {
+            background-color: rgba(0, 0, 0, 0.7);
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 15%;
+        }
+
+        .ball2 {
+            background-color: rgba(128, 0, 128, 0.7); /* Purple */
+            width: 150px;
+            height: 150px;
+            top: 30%;
+            left: 70%;
+        }
+
+        .ball3 {
+            background-color: rgba(0, 0, 255, 0.7); /* Blue */
+            width: 200px;
+            height: 200px;
+            top: 70%;
+            left: 40%;
+        }
+
+        .ball4 {
+            background-color: rgba(128, 0, 128, 0.7); /* Another Purple */
+            width: 80px;
+            height: 80px;
+            top: 40%;
+            left: 25%;
+        }
+
+        @keyframes moveBall {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(50px, 50px);
+            }
+            100% {
+                transform: translate(-50px, -50px);
+            }
+        }
+
+        /* Header Section for Company Name */
+        .header {
+            padding: 20px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .header .company-name {
+            font-size: 50px;
+            color: #FF9900;
+            font-weight: bold;
+        }
+
+        /* Login Section Container */
+        .login-container {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex-direction: column;
+        }
+
+        /* Login Box Style */
+        .login-box {
+            width: 350px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+            display: none;
+            border-radius: 15px;
+        }
+
+        .login-box.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Interactive Hover Effect for Login Box */
+        .login-box:hover {
+            box-shadow: 0 10px 50px rgba(255, 153, 0, 0.7);
+            border-radius: 20px;
+        }
+
+        /* Interactive Button Animation */
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background-color: #FF9900;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .login-box button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Floating Labels for Inputs */
+        .floating-label {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .floating-label input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .floating-label label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 14px;
+            color: #666;
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
+
+        .floating-label input:focus + label,
+        .floating-label input:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 10px;
+            font-size: 12px;
+            color: #FF9900;
+        }
+
+        /* Password Visibility Toggle */
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        /* Footer styling */
+        footer {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-company-name {
+            color: #FF9900;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Motion Balls -->
+    <div class="background-container">
+        <div class="ball ball1"></div>
+        <div class="ball ball2"></div>
+        <div class="ball ball3"></div>
+        <div class="ball ball4"></div>
+    </div>
+
+    <!-- Company Name Section -->
+    <div class="header">
+        <div class="company-name">𝕮𝖊𝖒𝖊𝖓𝖙𝕮𝖔𝖗𝖕 &euro;</div>
+    </div>
+
+    <!-- Login Section -->
+    <section class="login-container">
+        <div class="text-center">
+            <div class="toggle-button-group">
+                <button class="btn btn-warning toggle-button" id="userToggle" onclick="showForm('user')">User Login</button>
+                <button class="btn btn-warning toggle-button" id="adminToggle" onclick="showForm('admin')">Admin Login</button>
+            </div>
+            
+            <!-- User Login Form -->
+            <div class="login-box" id="userLoginForm">
+                <h2>User Login</h2>
+                <form action="user_dashboard.html" method="POST" onsubmit="return validateUser();">
+                    <div class="floating-label">
+                        <input type="text" id="userUsername" placeholder=" " required>
+                        <label for="userUsername">Username</label>
+                    </div>
+                    <div class="floating-label">
+                        <input type="password" id="userPassword" placeholder=" " required>
+                        <label for="userPassword">Password</label>
+                        <span class="password-toggle" onclick="togglePassword('userPassword')">👁</span>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+
+            <!-- Admin Login Form -->
+            <div class="login-box" id="adminLoginForm">
+                <h2>Admin Login</h2>
+                <form action="admin_dashboard.html" method="POST" onsubmit="return validateAdmin();">
+                    <div class="floating-label">
+                        <input type="text" id="adminUsername" placeholder=" " required>
+                        <label for="adminUsername">Admin Username</label>
+                    </div>
+                    <div class="floating-label">
+                        <input type="password" id="adminPassword" placeholder=" " required>
+                        <label for="adminPassword">Password</label>
+                        <span class="password-toggle" onclick="togglePassword('adminPassword')">👁</span>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer with Company Name -->
+    <footer>
+        <p>&copy; 2024 <span class="footer-company-name">𝕮𝖊𝖒𝖊𝖓𝖙𝕮𝖔𝖗𝖕 &euro;</span>. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        function togglePassword(id) {
+            const passwordInput = document.getElementById(id);
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        }
+
+        // Function to show the corresponding login form with animation
+        function showForm(formType) {
+            const userForm = document.getElementById('userLoginForm');
+            const adminForm = document.getElementById('adminLoginForm');
+
+            // Hide both forms first
+            userForm.classList.remove('active');
+            adminForm.classList.remove('active');
+            userForm.style.display = 'none';
+            adminForm.style.display = 'none';
+
+            // Swap the forms by showing the selected one with a transition
+            if (formType === 'user') {
+                userForm.style.display = 'block';
+                setTimeout(() => userForm.classList.add('active'), 10); // Add delay to trigger transition
+                document.getElementById('userToggle').classList.add('active');
+                document.getElementById('adminToggle').classList.remove('active');
+            } else if (formType === 'admin') {
+                adminForm.style.display = 'block';
+                setTimeout(() => adminForm.classList.add('active'), 10); // Add delay to trigger transition
+                document.getElementById('adminToggle').classList.add('active');
+                document.getElementById('userToggle').classList.remove('active');
+            }
+        }
+
+        // Show user login by default
+        showForm('user');
+    </script>
+
+</body>
+</html>

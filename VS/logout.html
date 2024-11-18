@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logging Out...</title>
+    <script>
+        // Simulate a logout process (e.g., clear session data)
+        function logout() {
+            // Here you could clear session data or cookies if using a backend
+            // For demonstration, we will just redirect after a short delay
+            setTimeout(() => {
+                window.location.href = 'index.html'; // Redirect to login page
+            }, 2000); // Redirect after 2 seconds
+        }
+    </script>
+</head>
+<body onload="logout()">
+    <h1>Logging Out...</h1>
+    <p>You are being logged out. Please wait...</p>
+</body>
+</html>

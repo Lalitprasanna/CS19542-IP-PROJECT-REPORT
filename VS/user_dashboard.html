@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2c3e50;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: #2980b9;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #fff;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            background-color: white;
+        }
+
+        .btn-primary {
+            background-color: #1abc9c;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #16a085;
+            transform: scale(1.05);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table thead th {
+            background-color: #2980b9;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .table tbody td {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+            transition: background-color 0.3s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #2980b9;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>User Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <!-- User Orders Section -->
+        <div class="card p-4 mt-4">
+            <h2>Your Orders</h2>
+            <div class="table-responsive">
+                <table id="userOrderTable" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- User orders will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Cement Order Form -->
+        <div class="card p-4 mt-4">
+            <h2>Order Cement</h2>
+            <form id="cementOrderForm">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="cementType" class="form-label">Select Cement Type</label>
+                        <select id="cementType" class="form-select">
+                            <option value="portland_cement">Portland Cement</option>
+                            <option value="ready_mix">Ready Mix Cement</option>
+                            <option value="white_cement">White Cement</option>
+                            <option value="hydraulic_cement">Hydraulic Cement</option>
+                            <option value="fly_ash_cement">Fly Ash Cement</option>
+                            <option value="colored_cement">Colored Cement</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="quantity" class="form-label">Quantity (in bags)</label>
+                        <input type="number" id="quantity" class="form-control" min="1" value="1">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample prices for each cement type
+        const cementPrices = {
+            portland_cement: 100,
+            ready_mix: 120,
+            white_cement: 150,
+            hydraulic_cement: 130,
+            fly_ash_cement: 110,
+            colored_cement: 140
+        };
+
+        document.getElementById('cementOrderForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent the default form submission
+
+            const cementType = document.getElementById('cementType').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const totalPrice = quantity * cementPrices[cementType];
+            const date = new Date().toISOString().split('T')[0]; // Current date
+            const orderId = (Math.floor(Math.random() * 900) + 100).toString();  // Random order ID
+
+            // Prepare data to send to PHP
+            const formData = new URLSearchParams({
+                cement_type: cementType,
+                quantity: quantity,
+                total_price: totalPrice,
+                order_date: date,
+                order_id: orderId
+            });
+
+            // Send AJAX request to save the order via POST
+            fetch('save_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === "success") {
+                    alert('Order placed successfully!');
+                    populateUserOrders();  // Refresh the orders table (you need to implement this)
+                } else {
+                    alert('Failed to place order.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
